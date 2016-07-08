@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		990B957A1D2E9AD900C9E550 /* libc++.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 990B95791D2E9AD900C9E550 /* libc++.1.dylib */; };
+		990B957C1D2E9AF800C9E550 /* libbz2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 990B957B1D2E9AF800C9E550 /* libbz2.1.0.dylib */; };
+		990B957E1D2E9B0900C9E550 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 990B957D1D2E9B0900C9E550 /* libz.1.dylib */; };
+		990B95801D2E9B1E00C9E550 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 990B957F1D2E9B1E00C9E550 /* libiconv.2.dylib */; };
 		ED1FB9151A8A83D80072E6BC /* AssetGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = ED92EA621A705D9800E2C415 /* AssetGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		ED92E9E21A705CEF00E2C415 /* libHudlFFmpegProcessor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92E9D61A705CEF00E2C415 /* libHudlFFmpegProcessor.a */; };
 		ED92EA2E1A705D8700E2C415 /* KFAACEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92E9F51A705D8700E2C415 /* KFAACEncoder.m */; };
@@ -82,14 +86,10 @@
 		ED92EB361A705DAC00E2C415 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92EB221A705DAC00E2C415 /* libswscale.a */; };
 		ED92EB391A705E3200E2C415 /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92EB381A705E3200E2C415 /* Utilities.m */; };
 		ED92EB3A1A705E3200E2C415 /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92EB381A705E3200E2C415 /* Utilities.m */; };
-		ED92EB3C1A705ED000E2C415 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92EB3B1A705ED000E2C415 /* libiconv.dylib */; };
 		ED92EB3D1A705EDA00E2C415 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92EB3B1A705ED000E2C415 /* libiconv.dylib */; };
-		ED92EB3F1A705F0C00E2C415 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92EB3E1A705F0C00E2C415 /* libz.dylib */; };
-		ED92EB411A705F1000E2C415 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92EB401A705F1000E2C415 /* libbz2.dylib */; };
 		ED92EB421A705F1C00E2C415 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92EB3E1A705F0C00E2C415 /* libz.dylib */; };
 		ED92EB431A705F1F00E2C415 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92EB401A705F1000E2C415 /* libbz2.dylib */; };
 		ED92EB461A705F8100E2C415 /* KFRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = ED92EA251A705D8700E2C415 /* KFRecorder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EDFA73741A8A850800FDC9F2 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EDFA73731A8A850800FDC9F2 /* libc++.dylib */; };
 		EDFA73751A8A86BC00FDC9F2 /* avcodec.h in Headers */ = {isa = PBXBuildFile; fileRef = ED92EA691A705DAC00E2C415 /* avcodec.h */; };
 		EDFA73761A8A86BC00FDC9F2 /* avfft.h in Headers */ = {isa = PBXBuildFile; fileRef = ED92EA6A1A705DAC00E2C415 /* avfft.h */; };
 		EDFA73771A8A86BC00FDC9F2 /* dv_profile.h in Headers */ = {isa = PBXBuildFile; fileRef = ED92EA6B1A705DAC00E2C415 /* dv_profile.h */; };
@@ -306,6 +306,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		990B95791D2E9AD900C9E550 /* libc++.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.1.dylib"; path = "../../../../../../usr/lib/libc++.1.dylib"; sourceTree = "<group>"; };
+		990B957B1D2E9AF800C9E550 /* libbz2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.1.0.dylib; path = ../../../../../../usr/lib/libbz2.1.0.dylib; sourceTree = "<group>"; };
+		990B957D1D2E9B0900C9E550 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = ../../../../../../usr/lib/libz.1.dylib; sourceTree = "<group>"; };
+		990B957F1D2E9B1E00C9E550 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = ../../../../../../usr/lib/libiconv.2.dylib; sourceTree = "<group>"; };
 		ED92E9D61A705CEF00E2C415 /* libHudlFFmpegProcessor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHudlFFmpegProcessor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED92E9E11A705CEF00E2C415 /* HudlFFmpegProcessorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HudlFFmpegProcessorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED92E9E71A705CEF00E2C415 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -550,10 +554,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDFA73741A8A850800FDC9F2 /* libc++.dylib in Frameworks */,
-				ED92EB411A705F1000E2C415 /* libbz2.dylib in Frameworks */,
-				ED92EB3F1A705F0C00E2C415 /* libz.dylib in Frameworks */,
-				ED92EB3C1A705ED000E2C415 /* libiconv.dylib in Frameworks */,
+				990B95801D2E9B1E00C9E550 /* libiconv.2.dylib in Frameworks */,
+				990B957E1D2E9B0900C9E550 /* libz.1.dylib in Frameworks */,
+				990B957C1D2E9AF800C9E550 /* libbz2.1.0.dylib in Frameworks */,
+				990B957A1D2E9AD900C9E550 /* libc++.1.dylib in Frameworks */,
 				ED92EB311A705DAC00E2C415 /* libssl.a in Frameworks */,
 				ED92EB331A705DAC00E2C415 /* libswresample.a in Frameworks */,
 				ED92EB2B1A705DAC00E2C415 /* libavutil.a in Frameworks */,
@@ -1050,6 +1054,10 @@
 		ED92EB441A705F2E00E2C415 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				990B957F1D2E9B1E00C9E550 /* libiconv.2.dylib */,
+				990B957D1D2E9B0900C9E550 /* libz.1.dylib */,
+				990B957B1D2E9AF800C9E550 /* libbz2.1.0.dylib */,
+				990B95791D2E9AD900C9E550 /* libc++.1.dylib */,
 				EDFA73731A8A850800FDC9F2 /* libc++.dylib */,
 				ED92EB401A705F1000E2C415 /* libbz2.dylib */,
 				ED92EB3E1A705F0C00E2C415 /* libz.dylib */,

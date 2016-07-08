@@ -13,11 +13,6 @@
 		ED0C13CB1AA635ED008639D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED0C13C91AA635ED008639D6 /* Main.storyboard */; };
 		ED0C13CD1AA635ED008639D6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED0C13CC1AA635ED008639D6 /* Images.xcassets */; };
 		ED0C13D01AA635ED008639D6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED0C13CE1AA635ED008639D6 /* LaunchScreen.xib */; };
-		ED0C13DC1AA635ED008639D6 /* HudlFFmpegSampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ED0C13DB1AA635ED008639D6 /* HudlFFmpegSampleTests.m */; };
-		ED0C13E81AA63646008639D6 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED0C13E71AA63646008639D6 /* libc++.dylib */; };
-		ED316D571AA7610F00B685DE /* libHudlFFmpegProcessor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED316D561AA7610F00B685DE /* libHudlFFmpegProcessor.a */; };
-		ED316D591AA761CF00B685DE /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED316D581AA761CF00B685DE /* libiconv.dylib */; };
-		ED316D5B1AA7622300B685DE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED316D5A1AA7622300B685DE /* libz.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,7 +26,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		ED0C13BC1AA635ED008639D6 /* HudlFFmpegSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudlFFmpegSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED0C13BC1AA635ED008639D6 /* HudlFFmpegSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = HudlFFmpegSample.app; path = "/Users/sacha/Desktop/Hello-Stream/Submodules/HudlFFmpeg/Sample/HudlFFmpegSample/build/Debug-iphoneos/HudlFFmpegSample.app"; sourceTree = "<absolute>"; };
 		ED0C13C01AA635ED008639D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ED0C13C11AA635ED008639D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		ED0C13C31AA635ED008639D6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -41,13 +36,7 @@
 		ED0C13CA1AA635ED008639D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		ED0C13CC1AA635ED008639D6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		ED0C13CF1AA635ED008639D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		ED0C13D51AA635ED008639D6 /* HudlFFmpegSampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HudlFFmpegSampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		ED0C13DA1AA635ED008639D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		ED0C13DB1AA635ED008639D6 /* HudlFFmpegSampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HudlFFmpegSampleTests.m; sourceTree = "<group>"; };
-		ED0C13E71AA63646008639D6 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
-		ED316D561AA7610F00B685DE /* libHudlFFmpegProcessor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libHudlFFmpegProcessor.a; path = "Submodules/HudlFFmpeg/build/Debug-iphoneos/libHudlFFmpegProcessor.a"; sourceTree = "<group>"; };
-		ED316D581AA761CF00B685DE /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
-		ED316D5A1AA7622300B685DE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		ED0C13D51AA635ED008639D6 /* HudlFFmpegSampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = HudlFFmpegSampleTests.xctest; path = "/Users/sacha/Desktop/Hello-Stream/Submodules/HudlFFmpeg/Sample/HudlFFmpegSample/build/Debug-iphoneos/HudlFFmpegSampleTests.xctest"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,10 +44,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED316D5B1AA7622300B685DE /* libz.dylib in Frameworks */,
-				ED316D591AA761CF00B685DE /* libiconv.dylib in Frameworks */,
-				ED316D571AA7610F00B685DE /* libHudlFFmpegProcessor.a in Frameworks */,
-				ED0C13E81AA63646008639D6 /* libc++.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,23 +60,8 @@
 		ED0C13B31AA635ED008639D6 = {
 			isa = PBXGroup;
 			children = (
-				ED316D5A1AA7622300B685DE /* libz.dylib */,
-				ED316D581AA761CF00B685DE /* libiconv.dylib */,
-				ED316D561AA7610F00B685DE /* libHudlFFmpegProcessor.a */,
-				ED0C13E71AA63646008639D6 /* libc++.dylib */,
 				ED0C13BE1AA635ED008639D6 /* HudlFFmpegSample */,
-				ED0C13D81AA635ED008639D6 /* HudlFFmpegSampleTests */,
-				ED0C13BD1AA635ED008639D6 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		ED0C13BD1AA635ED008639D6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				ED0C13BC1AA635ED008639D6 /* HudlFFmpegSample.app */,
-				ED0C13D51AA635ED008639D6 /* HudlFFmpegSampleTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		ED0C13BE1AA635ED008639D6 /* HudlFFmpegSample */ = {
@@ -114,23 +84,6 @@
 			children = (
 				ED0C13C01AA635ED008639D6 /* Info.plist */,
 				ED0C13C11AA635ED008639D6 /* main.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		ED0C13D81AA635ED008639D6 /* HudlFFmpegSampleTests */ = {
-			isa = PBXGroup;
-			children = (
-				ED0C13DB1AA635ED008639D6 /* HudlFFmpegSampleTests.m */,
-				ED0C13D91AA635ED008639D6 /* Supporting Files */,
-			);
-			path = HudlFFmpegSampleTests;
-			sourceTree = "<group>";
-		};
-		ED0C13D91AA635ED008639D6 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				ED0C13DA1AA635ED008639D6 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -200,7 +153,7 @@
 				Base,
 			);
 			mainGroup = ED0C13B31AA635ED008639D6;
-			productRefGroup = ED0C13BD1AA635ED008639D6 /* Products */;
+			productRefGroup = ED0C13B31AA635ED008639D6;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -245,7 +198,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED0C13DC1AA635ED008639D6 /* HudlFFmpegSampleTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
