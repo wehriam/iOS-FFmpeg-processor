@@ -63,8 +63,6 @@ static unsigned int to_host(unsigned char* p)
     NSString *_directory;
 }
 
-@property (atomic) BOOL bitrateChanged;
-
 @end
 
 @implementation AVEncoder
@@ -239,7 +237,6 @@ static unsigned int to_host(unsigned char* p)
             fstat([_inputFile fileDescriptor], &st);
             if (st.st_size > OUTPUT_FILE_SWITCH_POINT || self.bitrateChanged)
             {
-                
                 self.bitrateChanged = NO;
                 _swapping = YES;
                 VideoEncoder* oldVideo = _writer;

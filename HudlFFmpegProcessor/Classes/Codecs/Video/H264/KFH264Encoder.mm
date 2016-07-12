@@ -66,6 +66,7 @@
 {
     [super setBitrate:bitrate];
     _encoder.bitrate = self.bitrate;
+    _encoder.bitrateChanged = YES;
 }
 
 - (void)encodeSampleBuffer:(CMSampleBufferRef)sampleBuffer

@@ -21,6 +21,7 @@ typedef int (^param_handler_t)(NSData* params);
 @interface AVEncoder : NSObject
 
 @property (atomic) int bitrate;
+@property (atomic) BOOL bitrateChanged;
 
 + (AVEncoder*) encoderForHeight:(int) height andWidth:(int) width bitrate:(int)bitrate directory:(NSString *)directory;
 

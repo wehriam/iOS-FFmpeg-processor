@@ -203,7 +203,7 @@ static int32_t fragmentOrder;
     self.videoHeight = 720;
     self.videoWidth = 1280;
     int audioBitrate = 64 * 1024; // 64 Kbps
-    int videoBitrate = 1 * 1024 * 1024; // 1 Mbps
+    int videoBitrate = 3 * 1024 * 1024; // 3 Mbps
     self.h264Encoder = [[KFH264Encoder alloc] initWithBitrate:videoBitrate width:self.videoWidth height:self.videoHeight directory:self.folderName];
     self.h264Encoder.delegate = self;
 
