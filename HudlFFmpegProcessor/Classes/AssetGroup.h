@@ -11,6 +11,7 @@
 @interface AssetGroup : NSObject
 
 @property (nonatomic, copy) NSString *fileName;
+@property (nonatomic, copy) NSString *manifestName;
 @property (nonatomic) int32_t order;
 @property (atomic) double duration;
 

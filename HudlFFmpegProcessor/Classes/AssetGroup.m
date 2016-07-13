@@ -12,7 +12,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"Order=%@,Duration=%@,Filename=%@", @(self.order), @(self.duration), self.fileName];
+    return [NSString stringWithFormat:@"Order=%@,Duration=%@,Filename=%@", @(self.order), @(self.duration), self.fileName, self.manifestName];
 }
 
 @end

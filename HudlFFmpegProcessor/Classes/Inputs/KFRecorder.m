@@ -159,8 +159,9 @@ static int32_t fragmentOrder;
                 continue;
             }
             [self.processedFragments addObject:relativePath];
-            group.order = fragmentOrder++;
-            group.fileName = relativePath;
+			group.order = fragmentOrder++;
+			group.fileName = relativePath;
+			group.manifestName = manifestPath;
 
             //DDLogVerbose(@"Posting New Asset: %@", group);
             //DDLogVerbose(@"Is Contained in Array %i", [self.processedFragments containsObject:relativePath]);
