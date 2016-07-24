@@ -386,17 +386,6 @@ static int32_t fragmentOrder;
             dispatch_source_cancel(self.fileMonitorSource);
             self.fileMonitorSource = nil;
         }
-        // clean up the capture*.mp4 files that FFmpeg was reading from, as well as params.mp4
-        NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:fullFolderPath error:nil];
-        for (NSString *path in files)
-        {
-            if ([path hasSuffix:@".mp4"] || [path hasSuffix:@".m3u8"])
-            {
-                NSString *fullPath = [fullFolderPath stringByAppendingPathComponent:path];
-                [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
-                //DDLogVerbose(@"Cleaning up by removing %@", fullPath);
-            }
-        }
         if (self.delegate && [self.delegate respondsToSelector:@selector(recorderDidFinishRecording:error:)])
         {
             dispatch_async(dispatch_get_main_queue(), ^{
