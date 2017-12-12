@@ -54,7 +54,7 @@
         _videoTimeBase.den = 1000000000;
         _audioTimeBase.num = 1;
         _audioTimeBase.den = 1000000000;
-        _segmentDurationSeconds = 8;
+        _segmentDurationSeconds = 2;
         [self setupOutputFileSegmentCount:segmentCount];
         _conversionQueue = dispatch_queue_create("HLS Write queue", DISPATCH_QUEUE_SERIAL);
     }

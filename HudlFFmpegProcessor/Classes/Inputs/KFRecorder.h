@@ -47,6 +47,8 @@ extern NSString *const SegmentManifestName;
 + (instancetype)recorderWithName:(NSString *)name;
 - (void)startRecording;
 - (void)stopRecording;
+- (void)setupAudioCapture;
+- (void)setupVideoCapture;
 - (void)setupSession;
 - (double)durationRecorded;
 

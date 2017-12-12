@@ -18,6 +18,7 @@
 #import "AssetGroup.h"
 #import "HlsManifestParser.h"
 #import "Utilities.h"
+#import <AVFoundation/AVFoundation.h>
 
 NSString *const NotifNewAssetGroupCreated = @"NotifNewAssetGroupCreated";
 NSString *const SegmentManifestName = @"hudl-video-fragment";
@@ -150,7 +151,7 @@ static int32_t fragmentOrder;
 {
     void (^postFragments)(void) = ^{
         NSArray *groups = [HlsManifestParser parseAssetGroupsForManifest:manifestPath];
-
+      
         for (AssetGroup *group in groups)
         {
             NSString *relativePath = [self.folderName stringByAppendingPathComponent:group.fileName];
@@ -163,8 +164,8 @@ static int32_t fragmentOrder;
 			group.fileName = relativePath;
 			group.manifestName = manifestPath;
 
-            //DDLogVerbose(@"Posting New Asset: %@", group);
-            //DDLogVerbose(@"Is Contained in Array %i", [self.processedFragments containsObject:relativePath]);
+            NSLog(@"Posting New Asset: %@", group);
+            NSLog(@"Is Contained in Array %i", [self.processedFragments containsObject:relativePath]);
             [[NSNotificationCenter defaultCenter] postNotificationName:NotifNewAssetGroupCreated object:group];
             self.currentSegmentDuration += group.duration;
             self.lastFragmentDate = [NSDate date];
@@ -220,6 +221,7 @@ static int32_t fragmentOrder;
     /*
      * Create audio connection
      */
+    /*
     AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
     NSError *error = nil;
     AVCaptureDeviceInput *audioInput = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:&error];
@@ -231,19 +233,24 @@ static int32_t fragmentOrder;
     {
         [self.session addInput:audioInput];
     }
+    */
 
     self.audioQueue = dispatch_queue_create("Audio Capture Queue", DISPATCH_QUEUE_SERIAL);
     self.audioOutput = [[AVCaptureAudioDataOutput alloc] init];
     [self.audioOutput setSampleBufferDelegate:self queue:self.audioQueue];
     if ([self.session canAddOutput:self.audioOutput])
     {
+        NSLog(@"Adding audio output.");
         [self.session addOutput:self.audioOutput];
+    } else {
+      NSLog(@"Unable to add audio output.");
     }
     self.audioConnection = [self.audioOutput connectionWithMediaType:AVMediaTypeAudio];
 }
 
 - (void)setupVideoCapture
 {
+    /*
     NSError *error = nil;
     _videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     AVCaptureDeviceInput* videoInput = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:&error];
@@ -255,6 +262,7 @@ static int32_t fragmentOrder;
     {
         [self.session addInput:videoInput];
     }
+     */
 
     // create an output for YUV output with self as delegate
     self.videoQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
@@ -265,7 +273,10 @@ static int32_t fragmentOrder;
     self.videoOutput.alwaysDiscardsLateVideoFrames = YES;
     if ([self.session canAddOutput:self.videoOutput])
     {
+        NSLog(@"Adding video output.");
         [self.session addOutput:self.videoOutput];
+    } else {
+      NSLog(@"Unable to add video output.");
     }
     self.videoConnection = [self.videoOutput connectionWithMediaType:AVMediaTypeVideo];
 
@@ -301,6 +312,7 @@ static int32_t fragmentOrder;
 #pragma mark AVCaptureOutputDelegate method
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
+
     if (!self.isRecording) return;
     // pass frame to encoders
     if (connection == self.videoConnection)
@@ -334,8 +346,8 @@ static int32_t fragmentOrder;
 - (void)setupSession
 {
     self.session = [[AVCaptureSession alloc] init];
-    [self setupVideoCapture];
-    [self setupAudioCapture];
+    //[self setupVideoCapture];
+    //[self setupAudioCapture];
 
     self.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:self.session];
     self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
@@ -356,7 +368,7 @@ static int32_t fragmentOrder;
     [self.hlsWriter prepareForWriting:&error];
     if (error)
     {
-        //DDLogError(@"Error preparing for writing: %@", error);
+        NSLog(@"Error preparing for writing: %@", error);
     }
     self.isRecording = YES;
     if (self.delegate && [self.delegate respondsToSelector:@selector(recorderDidStartRecording:error:)])
