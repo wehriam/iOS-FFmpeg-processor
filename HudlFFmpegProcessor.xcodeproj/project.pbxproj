@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		72CD99621FDFE52300FD055B /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 72CD995F1FDFE52300FD055B /* libz.1.dylib */; };
-		72CD99631FDFE52300FD055B /* libbz2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 72CD99601FDFE52300FD055B /* libbz2.1.0.dylib */; };
-		72CD99641FDFE52300FD055B /* libc++.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 72CD99611FDFE52300FD055B /* libc++.1.dylib */; };
-		72CD996A1FDFE87A00FD055B /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 72CD995A1FDFE39600FD055B /* libiconv.2.dylib */; };
+		720181471FE0BC6500371B23 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 720181431FE0BC6400371B23 /* libc++.dylib */; };
+		720181481FE0BC6500371B23 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 720181441FE0BC6500371B23 /* libiconv.dylib */; };
+		720181491FE0BC6500371B23 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 720181451FE0BC6500371B23 /* libz.dylib */; };
+		7201814A1FE0BC6500371B23 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 720181461FE0BC6500371B23 /* libbz2.dylib */; };
 		ED1FB9151A8A83D80072E6BC /* AssetGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = ED92EA621A705D9800E2C415 /* AssetGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		ED92E9E21A705CEF00E2C415 /* libHudlFFmpegProcessor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED92E9D61A705CEF00E2C415 /* libHudlFFmpegProcessor.a */; };
 		ED92EA2E1A705D8700E2C415 /* KFAACEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = ED92E9F51A705D8700E2C415 /* KFAACEncoder.m */; };
@@ -303,10 +303,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		72CD995A1FDFE39600FD055B /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = ../../../../../../../usr/lib/libiconv.2.dylib; sourceTree = "<group>"; };
-		72CD995F1FDFE52300FD055B /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = ../../../../../../../usr/lib/libz.1.dylib; sourceTree = "<group>"; };
-		72CD99601FDFE52300FD055B /* libbz2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.1.0.dylib; path = ../../../../../../../usr/lib/libbz2.1.0.dylib; sourceTree = "<group>"; };
-		72CD99611FDFE52300FD055B /* libc++.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.1.dylib"; path = "../../../../../../../usr/lib/libc++.1.dylib"; sourceTree = "<group>"; };
+		720181431FE0BC6400371B23 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libc++.dylib"; sourceTree = "<group>"; };
+		720181441FE0BC6500371B23 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libiconv.dylib; sourceTree = "<group>"; };
+		720181451FE0BC6500371B23 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libz.dylib; sourceTree = "<group>"; };
+		720181461FE0BC6500371B23 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libbz2.dylib; sourceTree = "<group>"; };
 		ED92E9D61A705CEF00E2C415 /* libHudlFFmpegProcessor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHudlFFmpegProcessor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED92E9E11A705CEF00E2C415 /* HudlFFmpegProcessorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HudlFFmpegProcessorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED92E9E71A705CEF00E2C415 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -547,17 +547,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				72CD996A1FDFE87A00FD055B /* libiconv.2.dylib in Frameworks */,
-				72CD99621FDFE52300FD055B /* libz.1.dylib in Frameworks */,
-				72CD99631FDFE52300FD055B /* libbz2.1.0.dylib in Frameworks */,
-				72CD99641FDFE52300FD055B /* libc++.1.dylib in Frameworks */,
 				ED92EB311A705DAC00E2C415 /* libssl.a in Frameworks */,
 				ED92EB331A705DAC00E2C415 /* libswresample.a in Frameworks */,
 				ED92EB2B1A705DAC00E2C415 /* libavutil.a in Frameworks */,
+				7201814A1FE0BC6500371B23 /* libbz2.dylib in Frameworks */,
 				ED92EB271A705DAC00E2C415 /* libavfilter.a in Frameworks */,
+				720181491FE0BC6500371B23 /* libz.dylib in Frameworks */,
 				ED92EB2D1A705DAC00E2C415 /* libcrypto.a in Frameworks */,
 				ED92EB251A705DAC00E2C415 /* libavdevice.a in Frameworks */,
+				720181481FE0BC6500371B23 /* libiconv.dylib in Frameworks */,
 				ED92EB351A705DAC00E2C415 /* libswscale.a in Frameworks */,
+				720181471FE0BC6500371B23 /* libc++.dylib in Frameworks */,
 				ED92EB231A705DAC00E2C415 /* libavcodec.a in Frameworks */,
 				ED92EB2F1A705DAC00E2C415 /* librtmp.a in Frameworks */,
 				ED92EB291A705DAC00E2C415 /* libavformat.a in Frameworks */,
@@ -607,6 +607,10 @@
 		ED92E9D81A705CEF00E2C415 /* HudlFFmpegProcessor */ = {
 			isa = PBXGroup;
 			children = (
+				720181461FE0BC6500371B23 /* libbz2.dylib */,
+				720181431FE0BC6400371B23 /* libc++.dylib */,
+				720181441FE0BC6500371B23 /* libiconv.dylib */,
+				720181451FE0BC6500371B23 /* libz.dylib */,
 				ED92EA661A705DAC00E2C415 /* FFmpeg */,
 				ED92E9F01A705D8700E2C415 /* Classes */,
 			);
@@ -1044,10 +1048,6 @@
 		ED92EB441A705F2E00E2C415 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				72CD99601FDFE52300FD055B /* libbz2.1.0.dylib */,
-				72CD99611FDFE52300FD055B /* libc++.1.dylib */,
-				72CD995F1FDFE52300FD055B /* libz.1.dylib */,
-				72CD995A1FDFE39600FD055B /* libiconv.2.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1504,6 +1504,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/HudlFFmpegProcessor/FFmpeg/lib",
 					/usr/local/Cellar/libiconv/1.15/lib,
+					"$(PROJECT_DIR)/HudlFFmpegProcessor",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1519,6 +1520,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/HudlFFmpegProcessor/FFmpeg/lib",
 					/usr/local/Cellar/libiconv/1.15/lib,
+					"$(PROJECT_DIR)/HudlFFmpegProcessor",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
