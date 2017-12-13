@@ -141,6 +141,7 @@
     
     eventCount = kevent(kq, NULL, 0, &event, 1, &timeout);
     assert((eventCount >= 0) && (eventCount < 2));
+  
     // call our delegate of the directory change
     [delegate directoryDidChange:self];
     

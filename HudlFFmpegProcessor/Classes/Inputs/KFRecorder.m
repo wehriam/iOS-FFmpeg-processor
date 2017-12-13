@@ -21,14 +21,16 @@
 #import <AVFoundation/AVFoundation.h>
 
 NSString *const NotifNewAssetGroupCreated = @"NotifNewAssetGroupCreated";
-NSString *const SegmentManifestName = @"hudl-video-fragment";
+NSString *const SegmentManifestName = @"bunch";
 
 static int32_t fragmentOrder;
 
 @interface KFRecorder()
 
-@property (nonatomic, strong) AVCaptureVideoDataOutput *videoOutput;
+
 @property (nonatomic, strong) AVCaptureAudioDataOutput *audioOutput;
+@property (nonatomic, strong) AVCaptureDeviceInput *audioInput;
+@property (nonatomic, strong) AVCaptureDeviceInput *videoInput;
 @property (nonatomic, strong) dispatch_queue_t videoQueue;
 @property (nonatomic, strong) dispatch_queue_t audioQueue;
 @property (nonatomic, strong) AVCaptureConnection *audioConnection;
@@ -41,6 +43,7 @@ static int32_t fragmentOrder;
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *folderName;
+@property (nonatomic, copy) NSString *hlsDirectoryPath;
 @property (nonatomic) NSUInteger segmentIndex;
 @property (nonatomic) BOOL foundManifest;
 @property (nonatomic) CMTime originalSample;
@@ -65,11 +68,16 @@ static int32_t fragmentOrder;
 {
     self = [super init];
     if (!self) return nil;
-
+    
+    self.audioSampleRate = 44100;
+    self.videoHeight = 1280;
+    self.videoWidth = 720;
+    self.audioBitrate = 128 * 1024; // 128 Kbps
+    self.videoBitrate = 3 * 1024 * 1024; // 3 Mbps
+    
     [self setupSession];
     self.processedFragments = [NSMutableSet new];
     self.scanningQueue = dispatch_queue_create("fsScanner", DISPATCH_QUEUE_SERIAL);
-
     return self;
 }
 
@@ -116,7 +124,6 @@ static int32_t fragmentOrder;
 {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     int fildes = open([path UTF8String], O_EVTONLY);
-
     if (self.fileMonitorSource)
     {
         dispatch_source_cancel(self.fileMonitorSource);
@@ -125,8 +132,14 @@ static int32_t fragmentOrder;
                                                     DISPATCH_VNODE_DELETE | DISPATCH_VNODE_WRITE | DISPATCH_VNODE_EXTEND |
                                                     DISPATCH_VNODE_ATTRIB | DISPATCH_VNODE_LINK | DISPATCH_VNODE_RENAME |
                                                     DISPATCH_VNODE_REVOKE, queue);
-
     dispatch_source_set_event_handler(self.fileMonitorSource, ^{
+        unsigned long flags = dispatch_source_get_data(self.fileMonitorSource);
+        if(flags & DISPATCH_VNODE_DELETE)
+        {
+            close(fildes);
+            self.fileMonitorSource = nil;
+            [self monitorFile:path];
+        }
         [self bgPostNewFragmentsInManifest:path]; // update fragments after file modification
     });
     dispatch_source_set_cancel_handler(self.fileMonitorSource, ^(void) {
@@ -154,19 +167,24 @@ static int32_t fragmentOrder;
       
         for (AssetGroup *group in groups)
         {
-            NSString *relativePath = [self.folderName stringByAppendingPathComponent:group.fileName];
-            if ([self.processedFragments containsObject:relativePath])
+            //NSString *relativePath = [self.folderName stringByAppendingPathComponent:group.fileName];
+            NSString *absolutePath =  [self.hlsDirectoryPath stringByAppendingPathComponent:group.fileName];
+            if ([self.processedFragments containsObject:absolutePath])
             {
                 continue;
             }
-            [self.processedFragments addObject:relativePath];
-			group.order = fragmentOrder++;
-			group.fileName = relativePath;
-			group.manifestName = manifestPath;
-
-            NSLog(@"Posting New Asset: %@", group);
-            NSLog(@"Is Contained in Array %i", [self.processedFragments containsObject:relativePath]);
-            [[NSNotificationCenter defaultCenter] postNotificationName:NotifNewAssetGroupCreated object:group];
+            [self.processedFragments addObject:absolutePath];
+            
+            NSDictionary* fragment = @{
+                                       @"order": @((NSInteger) fragmentOrder++),
+                                       @"path": absolutePath,
+                                       @"filename": group.fileName,
+                                       @"height": @((NSInteger) self.videoHeight),
+                                       @"width": @((NSInteger) self.videoWidth),
+                                       @"audioBitrate": @((NSInteger) self.audioBitrate),
+                                       @"videoBitrate": @((NSInteger) self.videoBitrate),
+                                       };
+            [[NSNotificationCenter defaultCenter] postNotificationName:NotifNewAssetGroupCreated object:fragment];
             self.currentSegmentDuration += group.duration;
             self.lastFragmentDate = [NSDate date];
         }
@@ -186,14 +204,15 @@ static int32_t fragmentOrder;
 {
     self.foundManifest = NO;
     NSString *basePath = [Utilities applicationSupportDirectory];
-    self.folderName = [NSString stringWithFormat:@"%@.hls", name];
+    self.folderName = name;
     NSString *hlsDirectoryPath = [basePath stringByAppendingPathComponent:self.folderName];
-
+    self.hlsDirectoryPath = hlsDirectoryPath;
     [[NSFileManager defaultManager] createDirectoryAtPath:hlsDirectoryPath withIntermediateDirectories:YES attributes:nil error:nil];
 
     [self setupEncoders];
-
-    self.directoryWatcher = [HudlDirectoryWatcher watchFolderWithPath:hlsDirectoryPath delegate:self];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.directoryWatcher = [HudlDirectoryWatcher watchFolderWithPath:hlsDirectoryPath delegate:self];
+    });
     self.hlsWriter = [[KFHLSWriter alloc] initWithDirectoryPath:hlsDirectoryPath segmentCount:self.segmentIndex];
     [self.hlsWriter addVideoStreamWithWidth:self.videoWidth height:self.videoHeight];
     [self.hlsWriter addAudioStreamWithSampleRate:self.audioSampleRate];
@@ -201,15 +220,11 @@ static int32_t fragmentOrder;
 
 - (void)setupEncoders
 {
-    self.audioSampleRate = 44100;
-    self.videoHeight = 720;
-    self.videoWidth = 1280;
-    int audioBitrate = 64 * 1024; // 64 Kbps
-    int videoBitrate = 3 * 1024 * 1024; // 3 Mbps
-    self.h264Encoder = [[KFH264Encoder alloc] initWithBitrate:videoBitrate width:self.videoWidth height:self.videoHeight directory:self.folderName];
+
+    self.h264Encoder = [[KFH264Encoder alloc] initWithBitrate:self.videoBitrate width:self.videoWidth height:self.videoHeight directory:self.folderName];
     self.h264Encoder.delegate = self;
 
-    self.aacEncoder = [[KFAACEncoder alloc] initWithBitrate:audioBitrate sampleRate:self.audioSampleRate channels:1];
+    self.aacEncoder = [[KFAACEncoder alloc] initWithBitrate:self.audioBitrate sampleRate:self.audioSampleRate channels:1];
     self.aacEncoder.delegate = self;
     self.aacEncoder.addADTSHeader = YES;
 }
@@ -224,14 +239,14 @@ static int32_t fragmentOrder;
     /*
     AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
     NSError *error = nil;
-    AVCaptureDeviceInput *audioInput = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:&error];
+    self.audioInput = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:&error];
     if (error)
     {
         NSLog(@"Error getting audio input device: %@", error.description);
     }
-    if ([self.session canAddInput:audioInput])
+    if ([self.session canAddInput:self.audioInput])
     {
-        [self.session addInput:audioInput];
+        [self.session addInput:self.audioInput];
     }
     */
 
@@ -252,15 +267,14 @@ static int32_t fragmentOrder;
 {
     /*
     NSError *error = nil;
-    _videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    AVCaptureDeviceInput* videoInput = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:&error];
+    self.videoInput = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:&error];
     if (error)
     {
         NSLog(@"Error getting video input device: %@", error.description);
     }
-    if ([self.session canAddInput:videoInput])
+    if ([self.session canAddInput:self.videoInput])
     {
-        [self.session addInput:videoInput];
+        [self.session addInput:self.videoInput];
     }
      */
 
@@ -291,6 +305,14 @@ static int32_t fragmentOrder;
             self.videoConnection.enablesVideoStabilizationWhenAvailable = YES;
         }
     }
+}
+
+- (void)cleanUpCameraInputAndOutput
+{
+    [self.session removeOutput:self.videoOutput];
+    [self.session removeOutput:self.audioOutput];
+    [self.session removeInput:self.videoInput];
+    [self.session removeInput:self.audioInput];
 }
 
 #pragma mark KFEncoderDelegate method
@@ -343,8 +365,21 @@ static int32_t fragmentOrder;
     }
 }
 
+- (void)setupSessionWithCaptureDevice:(AVCaptureDevice *)videoDevice
+{
+    _videoDevice = videoDevice;
+
+
+    [self setupVideoCapture];
+    [self setupAudioCapture];
+    
+    //self.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:self.session];
+    //self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+}
+
 - (void)setupSession
 {
+    _videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     self.session = [[AVCaptureSession alloc] init];
     //[self setupVideoCapture];
     //[self setupAudioCapture];
@@ -397,6 +432,17 @@ static int32_t fragmentOrder;
         {
             dispatch_source_cancel(self.fileMonitorSource);
             self.fileMonitorSource = nil;
+        }
+        // clean up the capture*.mp4 files that FFmpeg was reading from, as well as params.mp4
+        NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:fullFolderPath error:nil];
+        for (NSString *path in files)
+        {
+            if ([path hasSuffix:@".mp4"])
+            {
+                NSString *fullPath = [fullFolderPath stringByAppendingPathComponent:path];
+                [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
+                //DDLogVerbose(@"Cleaning up by removing %@", fullPath);
+            }
         }
         if (self.delegate && [self.delegate respondsToSelector:@selector(recorderDidFinishRecording:error:)])
         {

@@ -29,15 +29,18 @@ extern NSString *const SegmentManifestName;
 
 @property (nonatomic, strong) AVCaptureSession *session;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
-@property (nonatomic, strong, readonly) AVCaptureDevice *videoDevice;
+@property (nonatomic, strong) AVCaptureDevice *videoDevice;
 @property (nonatomic, strong, readonly) AVCaptureConnection *videoConnection;
 
 @property (nonatomic, strong) KFAACEncoder *aacEncoder;
 @property (nonatomic, strong) KFH264Encoder *h264Encoder;
 @property (nonatomic, strong) KFHLSWriter *hlsWriter;
 
+@property (nonatomic, strong) AVCaptureVideoDataOutput *videoOutput;
 @property (nonatomic) int videoWidth;
 @property (nonatomic) int videoHeight;
+@property (nonatomic) int videoBitrate;
+@property (nonatomic) int audioBitrate;
 @property (nonatomic) int audioSampleRate;
 
 @property (nonatomic) BOOL isRecording;
@@ -51,5 +54,7 @@ extern NSString *const SegmentManifestName;
 - (void)setupVideoCapture;
 - (void)setupSession;
 - (double)durationRecorded;
+- (void)setupSessionWithCaptureDevice:(AVCaptureDevice *)videoDevice;
+- (void)cleanUpCameraInputAndOutput;
 
 @end
