@@ -88,7 +88,7 @@ static int32_t fragmentOrder;
     {
         return [devices objectAtIndex:0];
     }
-
+    
     return nil;
 }
 
@@ -111,10 +111,10 @@ static int32_t fragmentOrder;
         {
             NSFileHandle *manifest = [NSFileHandle fileHandleForReadingAtPath:manifestPath];
             if (manifest == nil) return;
-
+            
             [self monitorFile:manifestPath];
             //DDLogVerbose(@"Monitoring manifest file");
-
+            
             self.foundManifest = YES;
         }
     });
@@ -164,7 +164,7 @@ static int32_t fragmentOrder;
 {
     void (^postFragments)(void) = ^{
         NSArray *groups = [HlsManifestParser parseAssetGroupsForManifest:manifestPath];
-      
+        
         for (AssetGroup *group in groups)
         {
             //NSString *relativePath = [self.folderName stringByAppendingPathComponent:group.fileName];
@@ -178,18 +178,19 @@ static int32_t fragmentOrder;
             NSDictionary* fragment = @{
                                        @"order": @((NSInteger) fragmentOrder++),
                                        @"path": absolutePath,
+                                       @"manifestPath": manifestPath,
                                        @"filename": group.fileName,
                                        @"height": @((NSInteger) self.videoHeight),
                                        @"width": @((NSInteger) self.videoWidth),
                                        @"audioBitrate": @((NSInteger) self.audioBitrate),
-                                       @"videoBitrate": @((NSInteger) self.videoBitrate),
+                                       @"videoBitrate": @((NSInteger) self.videoBitrate)
                                        };
             [[NSNotificationCenter defaultCenter] postNotificationName:NotifNewAssetGroupCreated object:fragment];
             self.currentSegmentDuration += group.duration;
             self.lastFragmentDate = [NSDate date];
         }
     };
-
+    
     if (synchronously)
     {
         dispatch_sync(self.scanningQueue, postFragments);
@@ -208,7 +209,7 @@ static int32_t fragmentOrder;
     NSString *hlsDirectoryPath = [basePath stringByAppendingPathComponent:self.folderName];
     self.hlsDirectoryPath = hlsDirectoryPath;
     [[NSFileManager defaultManager] createDirectoryAtPath:hlsDirectoryPath withIntermediateDirectories:YES attributes:nil error:nil];
-
+    
     [self setupEncoders];
     dispatch_async(dispatch_get_main_queue(), ^{
         self.directoryWatcher = [HudlDirectoryWatcher watchFolderWithPath:hlsDirectoryPath delegate:self];
@@ -220,10 +221,10 @@ static int32_t fragmentOrder;
 
 - (void)setupEncoders
 {
-
+    
     self.h264Encoder = [[KFH264Encoder alloc] initWithBitrate:self.videoBitrate width:self.videoWidth height:self.videoHeight directory:self.folderName];
     self.h264Encoder.delegate = self;
-
+    
     self.aacEncoder = [[KFAACEncoder alloc] initWithBitrate:self.audioBitrate sampleRate:self.audioSampleRate channels:1];
     self.aacEncoder.delegate = self;
     self.aacEncoder.addADTSHeader = YES;
@@ -232,24 +233,24 @@ static int32_t fragmentOrder;
 - (void)setupAudioCapture
 {
     // create capture device with video input
-
+    
     /*
      * Create audio connection
      */
     /*
-    AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-    NSError *error = nil;
-    self.audioInput = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:&error];
-    if (error)
-    {
-        NSLog(@"Error getting audio input device: %@", error.description);
-    }
-    if ([self.session canAddInput:self.audioInput])
-    {
-        [self.session addInput:self.audioInput];
-    }
-    */
-
+     AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+     NSError *error = nil;
+     self.audioInput = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:&error];
+     if (error)
+     {
+     NSLog(@"Error getting audio input device: %@", error.description);
+     }
+     if ([self.session canAddInput:self.audioInput])
+     {
+     [self.session addInput:self.audioInput];
+     }
+     */
+    
     self.audioQueue = dispatch_queue_create("Audio Capture Queue", DISPATCH_QUEUE_SERIAL);
     self.audioOutput = [[AVCaptureAudioDataOutput alloc] init];
     [self.audioOutput setSampleBufferDelegate:self queue:self.audioQueue];
@@ -258,7 +259,7 @@ static int32_t fragmentOrder;
         NSLog(@"Adding audio output.");
         [self.session addOutput:self.audioOutput];
     } else {
-      NSLog(@"Unable to add audio output.");
+        NSLog(@"Unable to add audio output.");
     }
     self.audioConnection = [self.audioOutput connectionWithMediaType:AVMediaTypeAudio];
 }
@@ -266,18 +267,18 @@ static int32_t fragmentOrder;
 - (void)setupVideoCapture
 {
     /*
-    NSError *error = nil;
-    self.videoInput = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:&error];
-    if (error)
-    {
-        NSLog(@"Error getting video input device: %@", error.description);
-    }
-    if ([self.session canAddInput:self.videoInput])
-    {
-        [self.session addInput:self.videoInput];
-    }
+     NSError *error = nil;
+     self.videoInput = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:&error];
+     if (error)
+     {
+     NSLog(@"Error getting video input device: %@", error.description);
+     }
+     if ([self.session canAddInput:self.videoInput])
+     {
+     [self.session addInput:self.videoInput];
+     }
      */
-
+    
     // create an output for YUV output with self as delegate
     self.videoQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
     self.videoOutput = [[AVCaptureVideoDataOutput alloc] init];
@@ -290,10 +291,10 @@ static int32_t fragmentOrder;
         NSLog(@"Adding video output.");
         [self.session addOutput:self.videoOutput];
     } else {
-      NSLog(@"Unable to add video output.");
+        NSLog(@"Unable to add video output.");
     }
     self.videoConnection = [self.videoOutput connectionWithMediaType:AVMediaTypeVideo];
-
+    
     if ([self.videoConnection isVideoStabilizationSupported])
     {
         if ([self.videoConnection respondsToSelector:@selector(preferredVideoStabilizationMode)])
@@ -334,7 +335,7 @@ static int32_t fragmentOrder;
 #pragma mark AVCaptureOutputDelegate method
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
-
+    
     if (!self.isRecording) return;
     // pass frame to encoders
     if (connection == self.videoConnection)
@@ -368,8 +369,8 @@ static int32_t fragmentOrder;
 - (void)setupSessionWithCaptureDevice:(AVCaptureDevice *)videoDevice
 {
     _videoDevice = videoDevice;
-
-
+    
+    
     [self setupVideoCapture];
     [self setupAudioCapture];
     
@@ -383,7 +384,7 @@ static int32_t fragmentOrder;
     self.session = [[AVCaptureSession alloc] init];
     //[self setupVideoCapture];
     //[self setupAudioCapture];
-
+    
     self.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:self.session];
     self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 }
@@ -394,11 +395,11 @@ static int32_t fragmentOrder;
     self.currentSegmentDuration = 0;
     self.originalSample = CMTimeMakeWithSeconds(0, 0);
     self.latestSample = CMTimeMakeWithSeconds(0, 0);
-
+    
     NSString *segmentName = [self.name stringByAppendingPathComponent:[NSString stringWithFormat:@"segment-%lu-%@", (unsigned long)self.segmentIndex, [Utilities fileNameStringFromDate:[NSDate date]]]];
     [self setupHLSWriterWithName:segmentName];
     self.segmentIndex++;
-
+    
     NSError *error = nil;
     [self.hlsWriter prepareForWriting:&error];
     if (error)
@@ -412,7 +413,7 @@ static int32_t fragmentOrder;
             [self.delegate recorderDidStartRecording:self error:nil];
         });
     }
-
+    
 }
 
 - (void)stopRecording
@@ -454,3 +455,4 @@ static int32_t fragmentOrder;
 }
 
 @end
+
