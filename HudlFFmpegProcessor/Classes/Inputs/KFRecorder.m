@@ -237,20 +237,6 @@ static int32_t fragmentOrder;
     /*
      * Create audio connection
      */
-    /*
-     AVCaptureDevice *audioDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-     NSError *error = nil;
-     self.audioInput = [[AVCaptureDeviceInput alloc] initWithDevice:audioDevice error:&error];
-     if (error)
-     {
-     NSLog(@"Error getting audio input device: %@", error.description);
-     }
-     if ([self.session canAddInput:self.audioInput])
-     {
-     [self.session addInput:self.audioInput];
-     }
-     */
-    
     self.audioQueue = dispatch_queue_create("Audio Capture Queue", DISPATCH_QUEUE_SERIAL);
     self.audioOutput = [[AVCaptureAudioDataOutput alloc] init];
     [self.audioOutput setSampleBufferDelegate:self queue:self.audioQueue];
@@ -266,19 +252,6 @@ static int32_t fragmentOrder;
 
 - (void)setupVideoCapture
 {
-    /*
-     NSError *error = nil;
-     self.videoInput = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:&error];
-     if (error)
-     {
-     NSLog(@"Error getting video input device: %@", error.description);
-     }
-     if ([self.session canAddInput:self.videoInput])
-     {
-     [self.session addInput:self.videoInput];
-     }
-     */
-    
     // create an output for YUV output with self as delegate
     self.videoQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
     self.videoOutput = [[AVCaptureVideoDataOutput alloc] init];
@@ -294,18 +267,6 @@ static int32_t fragmentOrder;
         NSLog(@"Unable to add video output.");
     }
     self.videoConnection = [self.videoOutput connectionWithMediaType:AVMediaTypeVideo];
-    
-    if ([self.videoConnection isVideoStabilizationSupported])
-    {
-        if ([self.videoConnection respondsToSelector:@selector(preferredVideoStabilizationMode)])
-        {
-            self.videoConnection.preferredVideoStabilizationMode = AVCaptureVideoStabilizationModeAuto;
-        }
-        else
-        {
-            self.videoConnection.enablesVideoStabilizationWhenAvailable = YES;
-        }
-    }
 }
 
 - (void)cleanUpCameraInputAndOutput
@@ -366,18 +327,6 @@ static int32_t fragmentOrder;
     }
 }
 
-- (void)setupSessionWithCaptureDevice:(AVCaptureDevice *)videoDevice
-{
-    _videoDevice = videoDevice;
-    
-    
-    [self setupVideoCapture];
-    [self setupAudioCapture];
-    
-    //self.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:self.session];
-    //self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-}
-
 - (void)setupSession
 {
     _videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -386,7 +335,7 @@ static int32_t fragmentOrder;
     //[self setupAudioCapture];
     
     self.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:self.session];
-    self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    //self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 }
 
 - (void)startRecording
