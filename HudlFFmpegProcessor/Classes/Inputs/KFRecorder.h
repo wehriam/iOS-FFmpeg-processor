@@ -11,6 +11,7 @@
 #import "KFAACEncoder.h"
 #import "KFH264Encoder.h"
 #import "HudlDirectoryWatcher.h"
+#import <UIKit/UIKit.h>
 
 extern NSString *const NotifNewAssetGroupCreated;
 extern NSString *const SegmentManifestName;
@@ -38,6 +39,7 @@ extern NSString *const SegmentManifestName;
 
 @property (nonatomic, strong) AVCaptureVideoDataOutput *videoOutput;
 @property (nonatomic) int videoWidth;
+@property (nonatomic) BOOL isVideoCaptureSetup;
 @property (nonatomic) int videoHeight;
 @property (nonatomic) int videoBitrate;
 @property (nonatomic) int audioBitrate;

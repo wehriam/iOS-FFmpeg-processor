@@ -78,6 +78,7 @@ static int32_t fragmentOrder;
     self.processedFragments = [NSMutableSet new];
     self.scanningQueue = dispatch_queue_create("fsScanner", DISPATCH_QUEUE_SERIAL);
     self.videoQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
+    self.isVideoCaptureSetup = NO;
     return self;
 }
 
@@ -253,8 +254,8 @@ static int32_t fragmentOrder;
 
 - (void)setupVideoCapture
 {
-    if(self.videoOutput) {
-        NSLog(@"Video output already exists, skipping.");
+    if(self.isVideoCaptureSetup) {
+        NSLog(@"Video already setup, skipping.");
         return;
     }
     // create an output for YUV output with self as delegate
@@ -271,6 +272,7 @@ static int32_t fragmentOrder;
         NSLog(@"Unable to add video output.");
     }
     self.videoConnection = [self.videoOutput connectionWithMediaType:AVMediaTypeVideo];
+    self.isVideoCaptureSetup = YES;
 }
 
 - (void)cleanUpCameraInputAndOutput

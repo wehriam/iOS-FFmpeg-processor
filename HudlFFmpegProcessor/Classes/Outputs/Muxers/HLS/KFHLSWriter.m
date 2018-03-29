@@ -63,7 +63,7 @@
 
 - (void)setupOutputFileSegmentCount:(NSUInteger)segmentCount
 {
-    _manifestPath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-s-%li..m3u8", SegmentManifestName, segmentCount]];
+    _manifestPath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%li-%@.m3u8", segmentCount, SegmentManifestName]];
     _outputFile = [[FFOutputFile alloc] initWithPath:self.manifestPath options:@{ kFFmpegOutputFormatKey: @"hls" }];
 }
 
@@ -83,6 +83,8 @@
 
     int ret = av_opt_set_int(_outputFile.formatContext->priv_data, "hls_time", _segmentDurationSeconds, AV_OPT_SEARCH_CHILDREN);
     NSLog(@"hls_time %i", ret);
+    ret = av_opt_set_int(_outputFile.formatContext->priv_data, "hls_init_time", 1, AV_OPT_SEARCH_CHILDREN);
+    NSLog(@"hls_init_time %i", ret);
     ret = av_opt_set_int(_outputFile.formatContext->priv_data, "hls_list_size", 0, AV_OPT_SEARCH_CHILDREN);
     NSLog(@"hls_list_size %i", ret);
 }
