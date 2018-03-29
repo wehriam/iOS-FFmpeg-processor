@@ -31,7 +31,6 @@ static int32_t fragmentOrder;
 @property (nonatomic, strong) AVCaptureAudioDataOutput *audioOutput;
 @property (nonatomic, strong) AVCaptureDeviceInput *audioInput;
 @property (nonatomic, strong) AVCaptureDeviceInput *videoInput;
-@property (nonatomic, strong) dispatch_queue_t videoQueue;
 @property (nonatomic, strong) dispatch_queue_t audioQueue;
 @property (nonatomic, strong) AVCaptureConnection *audioConnection;
 @property (nonatomic, strong) AVCaptureConnection *videoConnection;
@@ -78,6 +77,7 @@ static int32_t fragmentOrder;
     [self setupSession];
     self.processedFragments = [NSMutableSet new];
     self.scanningQueue = dispatch_queue_create("fsScanner", DISPATCH_QUEUE_SERIAL);
+    self.videoQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
     return self;
 }
 
@@ -253,7 +253,6 @@ static int32_t fragmentOrder;
 - (void)setupVideoCapture
 {
     // create an output for YUV output with self as delegate
-    self.videoQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
     self.videoOutput = [[AVCaptureVideoDataOutput alloc] init];
     [self.videoOutput setSampleBufferDelegate:self queue:self.videoQueue];
     NSDictionary *captureSettings = @{(NSString*)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)};
@@ -340,41 +339,43 @@ static int32_t fragmentOrder;
 
 - (void)startRecording
 {
-    self.lastFragmentDate = [NSDate date];
-    self.currentSegmentDuration = 0;
-    self.originalSample = CMTimeMakeWithSeconds(0, 0);
-    self.latestSample = CMTimeMakeWithSeconds(0, 0);
-    
-    NSString *segmentName = [self.name stringByAppendingPathComponent:[NSString stringWithFormat:@"segment-%lu-%@", (unsigned long)self.segmentIndex, [Utilities fileNameStringFromDate:[NSDate date]]]];
-    [self setupHLSWriterWithName:segmentName];
-    self.segmentIndex++;
-    
-    NSError *error = nil;
-    [self.hlsWriter prepareForWriting:&error];
-    if (error)
-    {
-        NSLog(@"Error preparing for writing: %@", error);
-    }
-    self.isRecording = YES;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(recorderDidStartRecording:error:)])
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate recorderDidStartRecording:self error:nil];
-        });
-    }
+    dispatch_async(self.videoQueue, ^{
+        self.lastFragmentDate = [NSDate date];
+        self.currentSegmentDuration = 0;
+        self.originalSample = CMTimeMakeWithSeconds(0, 0);
+        self.latestSample = CMTimeMakeWithSeconds(0, 0);
+        
+        NSString *segmentName = [self.name stringByAppendingPathComponent:[NSString stringWithFormat:@"segment-%lu-%@", (unsigned long)self.segmentIndex, [Utilities fileNameStringFromDate:[NSDate date]]]];
+        [self setupHLSWriterWithName:segmentName];
+        self.segmentIndex++;
+        
+        NSError *error = nil;
+        [self.hlsWriter prepareForWriting:&error];
+        if (error)
+        {
+            NSLog(@"Error preparing for writing: %@", error);
+        }
+        self.isRecording = YES;
+        if (self.delegate && [self.delegate respondsToSelector:@selector(recorderDidStartRecording:error:)])
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate recorderDidStartRecording:self error:nil];
+            });
+        }
+    });
     
 }
 
 - (void)stopRecording
 {
-    self.isRecording = NO;
-    self.directoryWatcher = nil;
     dispatch_async(self.videoQueue, ^{ // put this on video queue so we don't accidentially write a frame while closing.
+        self.isRecording = NO;
+        self.directoryWatcher = nil;
         NSError *error = nil;
         [self.hlsWriter finishWriting:&error];
         if (error)
         {
-            //DDLogError(@"Error stop recording: %@", error);
+            NSLog(@"Error stop recording: %@", error);
         }
         NSString *fullFolderPath = [[Utilities applicationSupportDirectory] stringByAppendingPathComponent:self.folderName];
         [self postNewFragmentsInManifest:self.hlsWriter.manifestPath]; // update fragments after manifest finalization

@@ -42,6 +42,7 @@ extern NSString *const SegmentManifestName;
 @property (nonatomic) int videoBitrate;
 @property (nonatomic) int audioBitrate;
 @property (nonatomic) int audioSampleRate;
+@property (nonatomic, strong) dispatch_queue_t videoQueue;
 
 @property (nonatomic) BOOL isRecording;
 
@@ -58,3 +59,4 @@ extern NSString *const SegmentManifestName;
 - (void)cleanUpCameraInputAndOutput;
 
 @end
+

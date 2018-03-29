@@ -311,6 +311,7 @@ static unsigned int to_host(unsigned char* p)
         NSData* lenField = [_inputFile readDataOfLength:_lengthSize];
         cReady -= _lengthSize;
         unsigned char* p = (unsigned char*) [lenField bytes];
+        NSLog(@"lenNALU %s", p);
         unsigned int lenNALU = to_host(p);
         
         if (lenNALU > cReady)
