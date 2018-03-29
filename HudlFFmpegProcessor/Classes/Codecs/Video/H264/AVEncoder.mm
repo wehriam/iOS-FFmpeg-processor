@@ -311,7 +311,12 @@ static unsigned int to_host(unsigned char* p)
         NSData* lenField = [_inputFile readDataOfLength:_lengthSize];
         cReady -= _lengthSize;
         unsigned char* p = (unsigned char*) [lenField bytes];
-        NSLog(@"lenNALU %s", p);
+        
+        if(p == NULL) {
+            [_inputFile seekToFileOffset:[_inputFile offsetInFile] - 4];
+            break;
+        }
+        
         unsigned int lenNALU = to_host(p);
         
         if (lenNALU > cReady)
@@ -367,7 +372,6 @@ static unsigned int to_host(unsigned char* p)
     {
         return;
     }
-    
     // the mdat must be just encoded video.
     [self readAndDeliver:cReady];
 }

@@ -94,6 +94,7 @@ static int32_t fragmentOrder;
 
 - (void)directoryDidChange:(HudlDirectoryWatcher *)folderWatcher
 {
+    //NSLog(@"directoryDidChange");
     if (self.foundManifest)
     {
         return;
@@ -101,7 +102,7 @@ static int32_t fragmentOrder;
     dispatch_async(self.scanningQueue, ^{
         NSError *error = nil;
         NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:folderWatcher.directory error:&error];
-        //DDLogVerbose(@"Directory changed, fileCount: %lu", (unsigned long)files.count);
+        //NSLog(@"Directory changed, fileCount: %lu", (unsigned long)files.count);
         if (error)
         {
             //DDLogError(@"Error listing directory contents");
@@ -113,7 +114,7 @@ static int32_t fragmentOrder;
             if (manifest == nil) return;
             
             [self monitorFile:manifestPath];
-            //DDLogVerbose(@"Monitoring manifest file");
+            //NSLog(@"Monitoring manifest file");
             
             self.foundManifest = YES;
         }
@@ -252,6 +253,10 @@ static int32_t fragmentOrder;
 
 - (void)setupVideoCapture
 {
+    if(self.videoOutput) {
+        NSLog(@"Video output already exists, skipping.");
+        return;
+    }
     // create an output for YUV output with self as delegate
     self.videoOutput = [[AVCaptureVideoDataOutput alloc] init];
     [self.videoOutput setSampleBufferDelegate:self queue:self.videoQueue];

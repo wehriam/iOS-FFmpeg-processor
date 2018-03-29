@@ -63,7 +63,7 @@
 
 - (void)setupOutputFileSegmentCount:(NSUInteger)segmentCount
 {
-    _manifestPath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-s-%li-f-.m3u8", SegmentManifestName, segmentCount]];
+    _manifestPath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-s-%li..m3u8", SegmentManifestName, segmentCount]];
     _outputFile = [[FFOutputFile alloc] initWithPath:self.manifestPath options:@{ kFFmpegOutputFormatKey: @"hls" }];
 }
 
@@ -76,14 +76,15 @@
 
     [_videoStream setupVideoContextWithWidth:width height:height];
     _videoStream.stream->codec->bit_rate = 3 * 1024 * 1024; // 3 mbps
-
+    _videoStream.stream->codec->gop_size = 30;
+    
     FFBitstreamFilter *bitstreamFilter = [[FFBitstreamFilter alloc] initWithFilterName:@"h264_mp4toannexb"];
     [_videoStream addBitstreamFilter:bitstreamFilter];
 
     int ret = av_opt_set_int(_outputFile.formatContext->priv_data, "hls_time", _segmentDurationSeconds, AV_OPT_SEARCH_CHILDREN);
-    //DDLogVerbose(@"hls_time %i", ret);
-    ret = av_opt_set_int(_outputFile.formatContext->priv_data, "hls_list_size", 10000000, AV_OPT_SEARCH_CHILDREN);
-    //DDLogVerbose(@"hls_list_size %i", ret);
+    NSLog(@"hls_time %i", ret);
+    ret = av_opt_set_int(_outputFile.formatContext->priv_data, "hls_list_size", 0, AV_OPT_SEARCH_CHILDREN);
+    NSLog(@"hls_list_size %i", ret);
 }
 
 - (void)addAudioStreamWithSampleRate:(int)sampleRate
@@ -135,23 +136,24 @@
         _packet->size = (int)data.length;
         _packet->stream_index = streamIndex;
         uint64_t scaledPTS = av_rescale_q(originalPTS, _videoTimeBase, _outputFile.formatContext->streams[_packet->stream_index]->time_base);
+        /*
         if (streamIndex == 0) // log for video only
         {
-            //DDLogVerbose(@"*** Original PTS: %lld", originalPTS);
-            //DDLogVerbose(@"*** Scaled PTS: %lld", scaledPTS);
+            NSLog(@"*** Original PTS: %lld", originalPTS);
+            NSLog(@"*** Scaled PTS: %lld", scaledPTS);
         }
-
+        */
         _packet->pts = scaledPTS;
         _packet->dts = scaledPTS;
         NSError *error = nil;
         [_outputFile writePacket:_packet error:&error];
         if (error)
         {
-            //DDLogError(@"Error writing packet at streamIndex %lu and PTS %lld: %@", (unsigned long)streamIndex, originalPTS, error.description);
+            NSLog(@"Error writing packet at streamIndex %lu and PTS %lld: %@", (unsigned long)streamIndex, originalPTS, error.description);
         }
         else
         {
-            //DDLogVerbose(@"Wrote packet of length %d at streamIndex %d and \t oPTS %lld \t scaledPTS %lld", data.length, streamIndex, originalPTS, scaledPTS);
+            //NSLog(@"Wrote packet of length %d at streamIndex %d and \t oPTS %lld \t scaledPTS %lld", data.length, streamIndex, originalPTS, scaledPTS);
         }
     });
 }
